@@ -1,5 +1,3 @@
-
-
 import { Router } from 'express';
 import { body } from 'express-validator';
 import { authenticate } from '../middleware/auth.js';
@@ -14,7 +12,9 @@ router.post(
     body('email').isEmail().normalizeEmail(),
     body('password').isLength({ min: 6 }),
     body('name').trim().notEmpty(),
-    body('role').optional().isIn(['student', 'admin', 'xerox_shop', 'driver']),
+    body('role').optional().isIn(['student', 'admin', 'shop', 'driver']),
+    body('lat').optional().isFloat(),
+    body('lng').optional().isFloat(),
   ],
   validate,
   catchAsync(authController.register)

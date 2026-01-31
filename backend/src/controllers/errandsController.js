@@ -56,7 +56,6 @@ export async function claim(req, res) {
   res.json({ success: true, data: populated });
 }
 
-//check this func
 export async function update(req, res) {
   const errand = await Errand.findById(req.params.id);
   if (!errand) {
@@ -122,7 +121,6 @@ export async function update(req, res) {
   
     const totalReward = BASE_REWARD + bonus;
   
-    // ✅ Credit helper
     if (errand.claimedBy) {
       const alreadyCredited = await CreditLog.findOne({
         refId: errand._id,
@@ -146,9 +144,6 @@ export async function update(req, res) {
       }
     }
   }
-    // ===============================
-  // CANCEL (OWNER OR CLAIMANT)
-  // ===============================
   else if (status === 'cancelled') {
     if (!isOwner && !isClaimant) {
       return res.status(403).json({
@@ -167,9 +162,6 @@ export async function update(req, res) {
     errand.status = 'cancelled';
   }
 
-  // ===============================
-  // REOPEN (OWNER ONLY)
-  // ===============================
   else if (status === 'open') {
     if (!isOwner) {
       return res.status(403).json({
@@ -189,9 +181,6 @@ export async function update(req, res) {
     errand.claimedBy = null;
   }
 
-  // ===============================
-  // INVALID STATUS
-  // ===============================
   else {
     return res.status(400).json({
       success: false,

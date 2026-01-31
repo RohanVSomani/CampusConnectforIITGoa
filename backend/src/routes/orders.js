@@ -1,40 +1,18 @@
-
 import { Router } from 'express';
-import { body, query } from 'express-validator';
 import { authenticate } from '../middleware/auth.js';
-import { validate, catchAsync } from '../middleware/validate.js';
-import * as ordersController from '../controllers/ordersController.js';
+import * as c from '../controllers/ordersController.js';
 
 const router = Router();
-
 router.use(authenticate);
 
-router.post('/group', catchAsync(ordersController.createGroup));
+router.post('/group', c.createGroup);
+router.post('/join', c.joinGroup);
+router.post('/add-items', c.addItems);
 
-router.get(
-  '/',
-  [query('groupId').optional().trim()],
-  validate,
-  catchAsync(ordersController.list)
-);
+router.get('/groups/open', c.listOpenGroups);
+router.get('/my', c.listMyGroups);
+router.get('/group/:groupId', c.getGroupOrders);
 
-router.post(
-  '/',
-  [
-    body('groupId').trim().notEmpty(),
-    body('vendor').trim().notEmpty(),
-    body('vendorLocation').optional().trim(),
-    body('items').isArray(),
-    body('items.*.name').trim().notEmpty(),
-    body('items.*.quantity').isInt({ min: 1 }),
-    body('items.*.price').isFloat({ min: 0 }),
-    body('items.*.notes').optional().trim(),
-    body('deliveryLocation').optional().trim(),
-  ],
-  validate,
-  catchAsync(ordersController.create)
-);
-
-router.patch('/:id', catchAsync(ordersController.update));
+router.patch('/finalize/:groupId', c.finalizeGroup);
 
 export default router;

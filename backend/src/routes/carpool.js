@@ -37,6 +37,8 @@ router.post(
 router.get('/my', catchAsync(carpoolController.my));
 router.post('/:id/join', catchAsync(carpoolController.join));
 router.post('/:id/leave', catchAsync(carpoolController.leave));
+router.patch('/:id/end', catchAsync(carpoolController.end));
+
 router.patch('/:id', catchAsync(carpoolController.update));
 
 export default router;

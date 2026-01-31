@@ -1,5 +1,4 @@
-
-//carpool controller - creating updating joining leaving
+// carpool controller - creating updating joining leaving ending
 import { Carpool } from '../models/Carpool.js';
 
 export async function list(req, res) {
@@ -62,7 +61,12 @@ export async function join(req, res) {
     .populate('driverId', 'name email')
     .populate('passengers', 'name email');
 
-  req.io.of('/carpool').to(`carpool:${carpool._id}`).emit('updated', populated);
+  const io = req.app.get('io');
+  if (io) {
+    io.of('/carpool')
+      .to(`carpool:${carpool._id}`)
+      .emit('updated', populated);
+  }
 
   res.json({ success: true, data: populated });
 }
@@ -84,7 +88,44 @@ export async function leave(req, res) {
     .populate('driverId', 'name email')
     .populate('passengers', 'name email');
 
-  req.io.of('/carpool').to(`carpool:${carpool._id}`).emit('updated', populated);
+  const io = req.app.get('io');
+  if (io) {
+    io.of('/carpool')
+      .to(`carpool:${carpool._id}`)
+      .emit('updated', populated);
+  }
+
+  res.json({ success: true, data: populated });
+}
+
+export async function end(req, res) {
+  const carpool = await Carpool.findById(req.params.id);
+
+  if (!carpool) {
+    return res.status(404).json({ message: 'Carpool not found' });
+  }
+
+  if (carpool.driverId.toString() !== req.user._id.toString()) {
+    return res.status(403).json({ message: 'Only driver can end the carpool' });
+  }
+
+  if (['completed', 'cancelled'].includes(carpool.status)) {
+    return res.status(400).json({ message: 'Carpool already ended' });
+  }
+
+  carpool.status = 'completed';
+  await carpool.save();
+
+  const populated = await Carpool.findById(carpool._id)
+    .populate('driverId', 'name email')
+    .populate('passengers', 'name email');
+
+  const io = req.app.get('io');
+  if (io) {
+    io.of('/carpool')
+      .to(`carpool:${carpool._id}`)
+      .emit('updated', populated);
+  }
 
   res.json({ success: true, data: populated });
 }

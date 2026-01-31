@@ -1,5 +1,3 @@
-
-
 import { Router } from 'express';
 import { query } from 'express-validator';
 import { optionalAuth } from '../middleware/auth.js';
@@ -19,6 +17,6 @@ router.get(
   catchAsync(mapController.heatmap)
 );
 
-router.get('/pois', mapController.pois);
+router.get('/pois', catchAsync(mapController.pois));
 
 export default router;

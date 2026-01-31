@@ -1,6 +1,5 @@
-/**
- * Campus Credits + Gamification - transaction log
- */
+//Campus Credits + Gamification - transaction log
+
 
 import mongoose from 'mongoose';
 

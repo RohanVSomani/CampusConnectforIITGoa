@@ -14,7 +14,7 @@ router.use(authorize('admin'));
 router.get('/stats', catchAsync(adminController.stats));
 router.get(
   '/users',
-  [query('role').optional().isIn(['student', 'admin', 'xerox_shop', 'driver'])],
+  [query('role').optional().isIn(['student', 'admin', 'shop', 'driver'])],
   validate,
   catchAsync(adminController.users)
 );

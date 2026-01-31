@@ -5,12 +5,17 @@ export function notificationHandlers(ns, socket) {
   const userId = socket.user?._id?.toString();
 
   if (!userId) {
-    console.log("❌ Still no socket.user");
+    console.log("❌ No socket.user found");
     return;
   }
 
   socket.join(`user:${userId}`);
-  console.log("🔔 Joined room:", `user:${userId}`);
+
+  console.log("🔔 Joined notification room:", `user:${userId}`);
+
+  socket.on('disconnect', () => {
+    console.log("🔕 Notifications socket disconnected:", socket.id);
+  });
 }
 
 

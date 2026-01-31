@@ -64,7 +64,6 @@ export async function authenticateSocket(token) {
 
   return user;
 }
-//token
 export function signToken(userId) {
   return jwt.sign(
     { userId },
@@ -74,7 +73,6 @@ export function signToken(userId) {
 }
 
 /**
- * Role-based
  * @param {string[]} roles 
  */
 export function authorize(...roles) {
