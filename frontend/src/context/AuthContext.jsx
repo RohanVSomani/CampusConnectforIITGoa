@@ -62,7 +62,7 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback(() => {
     localStorage.removeItem('campusflow_token');
-    resetSocketManager(); // 🔥 drop old auth
+    resetSocketManager();
     setUser(null);
   }, []);
 
