@@ -1,11 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { Manager } from 'socket.io-client';
 import { useAuth } from '@/context/AuthContext';
+import { getSocketManager } from './socketManager';
 
 const BASE = import.meta.env.VITE_API_URL;
-
-// 🔥 SINGLE MANAGER FOR ENTIRE APP
-let manager;
 
 export function useSocket(namespace) {
   const { user, loading } = useAuth();
@@ -18,17 +15,7 @@ export function useSocket(namespace) {
     const token = localStorage.getItem('campusflow_token');
     if (!token) return;
 
-    // 🔥 CREATE MANAGER ONCE
-    if (!manager) {
-      manager = new Manager(BASE, {
-        path: '/socket.io',
-        transports: ['websocket'],
-        withCredentials: true,
-        auth: { token },
-      });
-    }
-
-    // 🔥 REUSE SOCKET
+    const manager = getSocketManager(BASE, token);
     const socket = manager.socket(namespace);
     socketRef.current = socket;
 
@@ -47,13 +34,13 @@ export function useSocket(namespace) {
     });
 
     return () => {
-      // ❌ DO NOT disconnect on rerender
       socket.off();
     };
   }, [namespace, user, loading]);
 
   return { socket: socketRef.current, connected };
 }
+
 
 
 export const useCarpoolSocket = () => useSocket('/carpool');
