@@ -2,6 +2,7 @@
 import { Errand } from '../models/Errand.js';
 import * as creditsEngine from '../services/creditsEngine.js';
 import { CreditLog } from '../models/CreditLog.js';
+import { User } from '../models/User.js';
 export async function list(req, res) {
   const filters = {};
   if (req.query.status) filters.status = req.query.status;
