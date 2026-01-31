@@ -19,7 +19,7 @@ export function useSocket(namespace = '/', options = {}) {
     const socket = io(`${BASE}${namespace}`, {
       auth: { token },
       withCredentials: true,
-      transports: ['websocket', 'polling'],
+      transports: ['polling','websocket'],
       ...options,
     });
 
