@@ -29,7 +29,7 @@ initSocket(io);
 async function start() {
   try {
     await connectDB();
-    server.listen(PORT, () => {
+    server.listen(PORT,'0.0.0.0' ,() => {
       console.log(`[CampusFlow AI] Server running on port ${PORT} (${process.env.NODE_ENV || 'development'})`);
     });
   } catch (err) {

@@ -7,7 +7,6 @@ import { orderHandlers } from '../modules/orders/socketHandlers.js';
 import { chatHandlers } from '../modules/chat/socketHandlers.js';
 import { carpoolChatHandlers } from '../modules/chat/socketHandlers.js';
 /**
- * For socket namespace
  * @param {import('socket.io').Server} io
  */
 //sockets for 
