@@ -79,7 +79,6 @@ export default function Layout() {
   const location = useLocation();
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  // 🚀 Auto redirect xerox shops
   useEffect(() => {
     if (user?.role === 'shop' && location.pathname === '/') {
       navigate('/shop/orders', { replace: true });
