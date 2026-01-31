@@ -54,3 +54,11 @@ export function useSocket(namespace) {
 
   return { socket: socketRef.current, connected };
 }
+
+
+export const useCarpoolSocket = () => useSocket('/carpool');
+export const useCarpoolChatSocket = () => useSocket('/carpool-chat');
+export const useChatSocket = () => useSocket('/chat');
+export const useNotificationsSocket = () => useSocket('/notifications');
+export const useLocationSocket = () => useSocket('/location');
+export const useOrdersSocket = () => useSocket('/orders');
