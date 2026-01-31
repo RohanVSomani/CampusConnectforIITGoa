@@ -5,17 +5,18 @@ import { useAuth } from '@/context/AuthContext';
 const BASE = import.meta.env.VITE_API_URL;
 
 export function useSocket(namespace) {
-  const { user, loading } = useAuth();
+  const { user, loading } = useAuth(); // 🔑 sync with AuthContext
   const socketRef = useRef(null);
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    if (loading || !user) return;
+    // ⛔ WAIT until auth is fully resolved
+    if (loading) return;
+    if (!user) return;
 
     const token = localStorage.getItem('campusflow_token');
     if (!token) return;
 
-    // 1️⃣ connect to SERVER
     const manager = new Manager(BASE, {
       path: '/socket.io',
       transports: ['websocket'], // Render-safe
@@ -23,7 +24,6 @@ export function useSocket(namespace) {
       withCredentials: true,
     });
 
-    // 2️⃣ attach namespace
     const socket = manager.socket(namespace);
     socketRef.current = socket;
 
@@ -45,10 +45,11 @@ export function useSocket(namespace) {
       socket.disconnect();
       manager.removeAllListeners();
     };
-  }, [namespace, user, loading]);
+  }, [namespace, user, loading]); // 🔥 THIS dependency is the fix
 
   return { socket: socketRef.current, connected };
 }
+
 
 /* ===== Namespace hooks ===== */
 
