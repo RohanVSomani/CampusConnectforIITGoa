@@ -92,6 +92,15 @@ export default function Dashboard() {
         </div>
         <CreditBadge credits={user?.credits ?? 0} />
       </div>
+      {!isAdmin && (
+  <div className="rounded-lg border bg-card p-6 text-center">
+    <h2 className="text-lg font-semibold">Welcome to the Dashboard</h2>
+    <p className="mt-2 text-muted-foreground">
+      Use the menu to create, join, or manage your activities.
+    </p>
+  </div>
+)}
+
 
       {isAdmin && stats && (
         <div>

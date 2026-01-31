@@ -29,7 +29,6 @@ router.get('/shop', authorize('shop'), catchAsync(printController.shopQueue));
 router.patch('/:id', authorize('shop'), catchAsync(printController.update));
 router.patch('/:id/collect', catchAsync(printController.collect));
 
-// 🔥 PDF VIEW / DOWNLOAD
 
 
 export default router;

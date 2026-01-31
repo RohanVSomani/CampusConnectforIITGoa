@@ -1,6 +1,4 @@
-/**
- * Credits – campus credits, history, leaderboard
- */
+
 
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
@@ -54,28 +52,7 @@ export default function Credits() {
             </CardTitle>
           </CardHeader>
         </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Level</CardDescription>
-            <CardTitle className="text-2xl">{balance?.level ?? 1}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Streak</CardDescription>
-            <CardTitle className="text-2xl">{balance?.streak ?? 0}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Badges</CardDescription>
-            <CardTitle className="text-base">
-              {(balance?.badges ?? []).length
-                ? balance.badges.join(', ')
-                : 'None yet'}
-            </CardTitle>
-          </CardHeader>
-        </Card>
+        
       </div>
 
       <Tabs defaultValue="history">
