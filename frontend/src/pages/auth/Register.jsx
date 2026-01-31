@@ -76,7 +76,7 @@ export default function Register() {
     <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">CampusFlow AI</CardTitle>
+          <CardTitle className="text-2xl">CampusFlow</CardTitle>
           <CardDescription>Create an account</CardDescription>
         </CardHeader>
 

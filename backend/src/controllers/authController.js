@@ -20,7 +20,7 @@ export async function register(req, res) {
   const payload = { email, password, name };
 
   if (role) payload.role = role;
-
+  payload.credits = 50;
   if (typeof lat === 'number' && typeof lng === 'number') {
     payload.lastKnownLocation = {
       type: 'Point',

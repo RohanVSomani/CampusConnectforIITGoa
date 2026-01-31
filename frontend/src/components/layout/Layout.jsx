@@ -89,7 +89,7 @@ export default function Layout() {
     <div className="flex min-h-screen bg-background">
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r bg-card md:block">
         <div className="flex h-16 items-center gap-2 border-b px-4">
-          <span className="text-lg font-bold text-primary">CampusFlow AI</span>
+          <span className="text-lg font-bold text-primary">CampusFlow</span>
         </div>
 
         <nav className="flex flex-col gap-1 p-2">
