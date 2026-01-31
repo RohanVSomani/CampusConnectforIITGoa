@@ -17,6 +17,7 @@ export function useSocket(namespace = '/', options = {}) {
     if (!token) return;
 
     const socket = io(`${BASE}${namespace}`, {
+      path: '/socket.io', 
       auth: { token },
       withCredentials: true,
       transports: ['polling','websocket'],
