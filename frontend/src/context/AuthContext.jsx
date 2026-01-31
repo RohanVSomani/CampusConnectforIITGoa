@@ -4,7 +4,7 @@
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { api } from '@/lib/api';
-
+import { resetSocketManager } from '@/lib/socketManager';
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -62,6 +62,7 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback(() => {
     localStorage.removeItem('campusflow_token');
+    resetSocketManager(); // 🔥 drop old auth
     setUser(null);
   }, []);
 
