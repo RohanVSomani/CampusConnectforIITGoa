@@ -23,27 +23,39 @@ export function initSocket(io) {
     const nsp = io.of(`/${name}`);
 
     nsp.on('connection', async (socket) => {
+      console.log(`🟢 Incoming socket → /${name}`, socket.id);
+    
       try {
         const token = socket.handshake.auth?.token;
         if (!token) {
-          socket.emit('auth_error', 'No auth token');
+          console.log('❌ Disconnect: No token');
+          socket.emit('auth_error', 'No token');
           return socket.disconnect(true);
         }
-
-        const user = await authenticateSocket(token);
+    
+        let user;
+        try {
+          user = await authenticateSocket(token);
+        } catch (err) {
+          console.log('❌ Disconnect: authenticateSocket error', err.message);
+          return socket.disconnect(true);
+        }
+    
         if (!user) {
-          socket.emit('auth_error', 'Invalid token');
+          console.log('❌ Disconnect: Invalid user');
           return socket.disconnect(true);
         }
-
+    
         socket.user = user;
-        console.log(`✅ Socket connected → /${name}:`, socket.id);
-
+        console.log(`✅ Auth OK → /${name}`, socket.id);
+    
         handler(nsp, socket);
       } catch (err) {
+        console.log('❌ Disconnect: Unexpected error', err.message);
         socket.disconnect(true);
       }
     });
+    
   });
 
   console.log('✅ All Socket namespaces initialized');
