@@ -29,15 +29,8 @@ const io = new Server(server, {
   transports: ['websocket'],
 });
 
-/* 🔥 INIT NAMESPACES HERE */
 initSocket(io);
-io.of('/carpool').on('connection', (socket) => {
-  console.log('✅ TEST carpool socket connected', socket.id);
 
-  socket.on('ping', () => {
-    socket.emit('pong');
-  });
-});
 
 const PORT = process.env.PORT || 5000;
 

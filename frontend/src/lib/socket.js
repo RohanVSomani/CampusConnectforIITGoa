@@ -4,26 +4,31 @@ import { useAuth } from '@/context/AuthContext';
 
 const BASE = import.meta.env.VITE_API_URL;
 
+// 🔥 SINGLE MANAGER FOR ENTIRE APP
+let manager;
+
 export function useSocket(namespace) {
-  const { user, loading } = useAuth(); // 🔑 sync with AuthContext
+  const { user, loading } = useAuth();
   const socketRef = useRef(null);
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    // ⛔ WAIT until auth is fully resolved
-    if (loading) return;
-    if (!user) return;
+    if (loading || !user) return;
 
     const token = localStorage.getItem('campusflow_token');
     if (!token) return;
 
-    const manager = new Manager(BASE, {
-      path: '/socket.io',
-      transports: ['websocket'], // Render-safe
-      auth: { token },
-      withCredentials: true,
-    });
+    // 🔥 CREATE MANAGER ONCE
+    if (!manager) {
+      manager = new Manager(BASE, {
+        path: '/socket.io',
+        transports: ['websocket'],
+        withCredentials: true,
+        auth: { token },
+      });
+    }
 
+    // 🔥 REUSE SOCKET
     const socket = manager.socket(namespace);
     socketRef.current = socket;
 
@@ -32,8 +37,8 @@ export function useSocket(namespace) {
       setConnected(true);
     });
 
-    socket.on('disconnect', () => {
-      console.log(`❌ Socket disconnected: ${namespace}`);
+    socket.on('disconnect', (reason) => {
+      console.log(`❌ Socket disconnected: ${namespace}`, reason);
       setConnected(false);
     });
 
@@ -42,20 +47,10 @@ export function useSocket(namespace) {
     });
 
     return () => {
-      socket.disconnect();
-      manager.removeAllListeners();
+      // ❌ DO NOT disconnect on rerender
+      socket.off();
     };
-  }, [namespace, user, loading]); // 🔥 THIS dependency is the fix
+  }, [namespace, user, loading]);
 
   return { socket: socketRef.current, connected };
 }
-
-
-/* ===== Namespace hooks ===== */
-
-export const useCarpoolSocket = () => useSocket('/carpool');
-export const useCarpoolChatSocket = () => useSocket('/carpool-chat');
-export const useChatSocket = () => useSocket('/chat');
-export const useNotificationsSocket = () => useSocket('/notifications');
-export const useLocationSocket = () => useSocket('/location');
-export const useOrdersSocket = () => useSocket('/orders');
