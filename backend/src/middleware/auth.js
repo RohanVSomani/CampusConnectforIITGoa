@@ -3,7 +3,7 @@
 import jwt from 'jsonwebtoken';
 import { User } from '../models/User.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-me';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 
 export async function authenticate(req, res, next) {

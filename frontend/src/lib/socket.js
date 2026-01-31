@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
+import { Manager } from 'socket.io-client';
 import { useAuth } from '@/context/AuthContext';
-import { getSocketManager } from './socketManager';
 
 const BASE = import.meta.env.VITE_API_URL;
 
 export function useSocket(namespace) {
   const { user, loading } = useAuth();
   const socketRef = useRef(null);
+  const managerRef = useRef(null);
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
@@ -15,7 +16,16 @@ export function useSocket(namespace) {
     const token = localStorage.getItem('campusflow_token');
     if (!token) return;
 
-    const manager = getSocketManager(BASE, token);
+    // 🔥 CREATE A FRESH MANAGER EVERY LOGIN SESSION
+    const manager = new Manager(BASE, {
+      path: '/socket.io',
+      transports: ['websocket'],
+      withCredentials: true,
+      auth: { token },
+    });
+
+    managerRef.current = manager;
+
     const socket = manager.socket(namespace);
     socketRef.current = socket;
 
@@ -34,12 +44,15 @@ export function useSocket(namespace) {
     });
 
     return () => {
-      socket.off();
+      socket.disconnect();
+      manager.disconnect();
+      managerRef.current = null;
     };
   }, [namespace, user, loading]);
 
   return { socket: socketRef.current, connected };
 }
+
 
 
 
