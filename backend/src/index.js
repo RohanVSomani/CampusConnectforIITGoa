@@ -26,7 +26,7 @@ const io = new Server(server, {
     origin: process.env.CORS_ORIGIN.split(','),
     credentials: true,
   },
-  transports: ['polling', 'websocket'],
+  transports: ['websocket'],
 });
 
 /* 🔥 INIT NAMESPACES HERE */

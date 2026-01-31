@@ -20,7 +20,7 @@ export function useSocket(namespace = '/', options = {}) {
       path: '/socket.io', 
       auth: { token },
       withCredentials: true,
-      transports: ['polling','websocket'],
+      transports: ['websocket'],
       ...options,
     });
 
