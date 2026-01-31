@@ -9,6 +9,7 @@ import { chatHandlers, carpoolChatHandlers } from '../modules/chat/socketHandler
  * @param {import('socket.io').Server} io
  */
 export function initSocket(io) {
+  console.log('🔥 initSocket() CALLED');
 
   /* =======================
      COMMON AUTH MIDDLEWARE

@@ -14,13 +14,12 @@ export function useSocket(namespace = '/', options = {}) {
   useEffect(() => {
     const token = localStorage.getItem('campusflow_token');
 
-    // ⛔ DO NOT CONNECT WITHOUT TOKEN (production critical)
     if (!token) return;
 
     const socket = io(`${BASE}${namespace}`, {
       auth: { token },
       withCredentials: true,
-      transports: ['websocket', 'polling'], // REQUIRED for Render
+      transports: ['websocket', 'polling'],
       ...options,
     });
 
