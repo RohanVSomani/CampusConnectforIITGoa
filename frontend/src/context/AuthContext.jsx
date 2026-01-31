@@ -36,8 +36,6 @@ export function AuthProvider({ children }) {
     const { token, user: u } = await api.post('/auth/login', { email, password });
     localStorage.setItem('campusflow_token', token);
     setUser(u);
-    window.location.reload();
-
     return u;
   }, []);
 
