@@ -1,17 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
-import { io, Manager } from 'socket.io-client';
+import { Manager } from 'socket.io-client';
+import { useAuth } from '@/context/AuthContext';
 
 const BASE = import.meta.env.VITE_API_URL;
 
 export function useSocket(namespace) {
+  const { user, loading } = useAuth();
   const socketRef = useRef(null);
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
+    if (loading || !user) return;
+
     const token = localStorage.getItem('campusflow_token');
     if (!token) return;
 
-    // 1️⃣ Create manager (connects to SERVER only)
+    // 1️⃣ connect to SERVER
     const manager = new Manager(BASE, {
       path: '/socket.io',
       transports: ['websocket'], // Render-safe
@@ -19,9 +23,8 @@ export function useSocket(namespace) {
       withCredentials: true,
     });
 
-    // 2️⃣ Get namespace socket
+    // 2️⃣ attach namespace
     const socket = manager.socket(namespace);
-
     socketRef.current = socket;
 
     socket.on('connect', () => {
@@ -42,7 +45,7 @@ export function useSocket(namespace) {
       socket.disconnect();
       manager.removeAllListeners();
     };
-  }, [namespace]);
+  }, [namespace, user, loading]);
 
   return { socket: socketRef.current, connected };
 }
