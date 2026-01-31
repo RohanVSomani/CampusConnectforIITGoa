@@ -1,28 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
-import { io } from 'socket.io-client';
+import { io, Manager } from 'socket.io-client';
 
 const BASE = import.meta.env.VITE_API_URL;
 
-/**
- * Generic socket hook
- * @param {string} namespace
- */
-export function useSocket(namespace = '/', options = {}) {
+export function useSocket(namespace) {
   const socketRef = useRef(null);
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('campusflow_token');
-
     if (!token) return;
 
-    const socket = io(`${BASE}${namespace}`, {
-      path: '/socket.io', 
+    // 1️⃣ Create manager (connects to SERVER only)
+    const manager = new Manager(BASE, {
+      path: '/socket.io',
+      transports: ['websocket'], // Render-safe
       auth: { token },
       withCredentials: true,
-      transports: ['websocket'],
-      ...options,
     });
+
+    // 2️⃣ Get namespace socket
+    const socket = manager.socket(namespace);
 
     socketRef.current = socket;
 
@@ -42,30 +40,18 @@ export function useSocket(namespace = '/', options = {}) {
 
     return () => {
       socket.disconnect();
-      socketRef.current = null;
-      setConnected(false);
+      manager.removeAllListeners();
     };
   }, [namespace]);
 
   return { socket: socketRef.current, connected };
 }
 
-/* ===== Namespace Hooks ===== */
+/* ===== Namespace hooks ===== */
 
-export const useNotificationsSocket = () =>
-  useSocket('/notifications');
-
-export const useChatSocket = () =>
-  useSocket('/chat');
-
-export const useLocationSocket = () =>
-  useSocket('/location');
-
-export const useCarpoolSocket = () =>
-  useSocket('/carpool');
-
-export const useCarpoolChatSocket = () =>
-  useSocket('/carpool-chat');
-
-export const useOrdersSocket = () =>
-  useSocket('/orders');
+export const useCarpoolSocket = () => useSocket('/carpool');
+export const useCarpoolChatSocket = () => useSocket('/carpool-chat');
+export const useChatSocket = () => useSocket('/chat');
+export const useNotificationsSocket = () => useSocket('/notifications');
+export const useLocationSocket = () => useSocket('/location');
+export const useOrdersSocket = () => useSocket('/orders');
