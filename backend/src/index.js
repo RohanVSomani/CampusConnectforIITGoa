@@ -1,14 +1,11 @@
+import 'dotenv/config';
 import http from 'http';
 import { Server } from 'socket.io';
-import dotenv from 'dotenv';
 import app from './app.js';
-import connectDB from './config/db.js';
-
-dotenv.config();
+import { connectDB } from './config/db.js';
+import { initSocket } from './config/socket.js';
 
 const PORT = process.env.PORT || 5000;
-
-await connectDB();
 
 const server = http.createServer(app);
 
@@ -20,42 +17,21 @@ const io = new Server(server, {
   },
 });
 
-const authMiddleware = (socket, next) => {
-  const token = socket.handshake.auth?.token;
+app.set('io', io);
 
-  if (!token) {
-    return next(new Error('Unauthorized'));
-  }
+initSocket(io);
 
+async function start() {
+  try {
+    await connectDB();
 
-  next();
-};
-
-const namespaces = [
-  'notifications',
-  'location',
-  'carpool',
-  'orders',
-];
-
-namespaces.forEach((name) => {
-  const nsp = io.of(`/${name}`);
-
-  nsp.use(authMiddleware);
-
-  nsp.on('connection', (socket) => {
-    console.log(`✅ Socket connected → /${name} : ${socket.id}`);
-
-    socket.on('disconnect', () => {
-      console.log(`❌ Socket disconnected → /${name} : ${socket.id}`);
+    server.listen(PORT, '0.0.0.0', () => {
+      console.log(`[CampusFlow AI] Server running on port ${PORT}`);
     });
-  });
-});
+  } catch (err) {
+    console.error('[CampusFlow AI] Failed to start:', err);
+    process.exit(1);
+  }
+}
 
-io.on('connection', (socket) => {
-  console.log('🌐 Root socket connected:', socket.id);
-});
-
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 CampusFlow backend running on port ${PORT}`);
-});
+start();
