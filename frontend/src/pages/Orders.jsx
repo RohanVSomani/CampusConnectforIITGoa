@@ -76,6 +76,7 @@ export default function Orders() {
 
 
   async function handleJoinGroup(group) {
+    await api.post('/orders/join', { groupId: group.groupId });
     setActiveGroup(group);
     loadGroup(group.groupId);
   }
