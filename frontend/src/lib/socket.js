@@ -16,7 +16,6 @@ export function useSocket(namespace) {
     const token = localStorage.getItem('campusflow_token');
     if (!token) return;
 
-    // 🔥 CREATE A FRESH MANAGER EVERY LOGIN SESSION
     const manager = new Manager(BASE, {
       path: '/socket.io',
       transports: ['websocket'],

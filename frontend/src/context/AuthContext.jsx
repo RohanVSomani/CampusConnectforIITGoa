@@ -1,6 +1,6 @@
-/**
- * Auth context - user, login, logout, token
- */
+
+// Auth context - user, login, logout, token
+
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { api } from '@/lib/api';

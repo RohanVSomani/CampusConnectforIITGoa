@@ -39,17 +39,10 @@ export default function CarpoolChat({ carpool, onClose }) {
       };
     }, [socket, connected, carpool._id]);
     
-
-  /* ===============================
-     Auto-scroll
-     =============================== */
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  /* ===============================
-     Send message
-     =============================== */
   function send() {
     if (!text.trim() || !socket || !connected) return;
 
