@@ -31,20 +31,21 @@ export default function CarpoolChat({ carpool, onClose }) {
   /* ===============================
      Join / leave socket room
      =============================== */
-  useEffect(() => {
-    if (!socket || !connected) return;
-
-    socket.emit('join:carpool', { carpoolId: carpool._id });
-
-    socket.on('message', (msg) => {
-      setMessages((prev) => [...prev, msg]);
-    });
-
-    return () => {
-      socket.emit('leave:carpool', { carpoolId: carpool._id });
-      socket.off('message');
-    };
-  }, [socket, connected, carpool._id]);
+     useEffect(() => {
+      if (!socket || !connected) return;
+    
+      // ✅ correct event for /carpool-chat
+      socket.emit('join', { carpoolId: carpool._id });
+    
+      socket.on('message', (msg) => {
+        setMessages((prev) => [...prev, msg]);
+      });
+    
+      return () => {
+        socket.off('message');
+      };
+    }, [socket, connected, carpool._id]);
+    
 
   /* ===============================
      Auto-scroll
