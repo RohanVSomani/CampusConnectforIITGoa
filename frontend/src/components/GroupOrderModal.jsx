@@ -11,40 +11,53 @@ export default function GroupOrderModal({
   onFinalize,
   onClose
 }) {
+  // Safety Check: If group isn't passed or is null, don't render anything
+  if (!group) return null;
+
+  // Defensive arrays to prevent .map() on undefined
+  const itemsList = group.items || [];
+  const formItems = addForm?.items || [];
+
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-
-      <Card className="w-full max-w-3xl max-h-[90vh] overflow-y-auto relative">
-
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <Card className="w-full max-w-3xl max-h-[90vh] overflow-y-auto relative shadow-2xl">
+        
+        {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-xl font-bold text-muted-foreground hover:text-red-500"
+          className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
         >
-          ✕
+          <span className="text-2xl">✕</span>
         </button>
 
-        <CardHeader className="flex justify-between">
-          <h2 className="font-semibold text-lg">
-            Group: {group.vendor}
-          </h2>
+        <CardHeader className="flex flex-row items-center justify-between border-b pb-4">
+          <div>
+            <h2 className="font-bold text-xl text-primary">
+              {group.vendor}
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Delivery to: {group.deliveryLocation}
+            </p>
+          </div>
 
-          {isLeader && (
-            <Button variant="destructive" onClick={onFinalize}>
-              Finalize
+          {isLeader && group.status === 'open' && (
+            <Button variant="destructive" size="sm" onClick={onFinalize}>
+              Finalize Order
             </Button>
           )}
         </CardHeader>
 
-        <CardContent className="space-y-6">
-
+        <CardContent className="space-y-8 pt-6">
+          
+          {/* ADD ITEMS SECTION - Only show if group is open */}
           {group.status === 'open' && (
-            <form onSubmit={onAddItems} className="space-y-3">
-              <h3 className="font-medium">Add Items</h3>
+            <form onSubmit={onAddItems} className="space-y-4 p-4 bg-accent/30 rounded-lg">
+              <h3 className="font-semibold text-sm uppercase tracking-wider">Add Your Items</h3>
 
-              {addForm.items.map((item, i) => (
+              {formItems.map((item, i) => (
                 <div key={i} className="flex gap-2">
                   <Input
-                    placeholder="Item"
+                    placeholder="Item name"
                     value={item.name}
                     onChange={e =>
                       setAddForm(f => ({
@@ -92,35 +105,52 @@ export default function GroupOrderModal({
                 </div>
               ))}
 
-              <Button type="button" variant="outline"
-                onClick={() =>
-                  setAddForm(f => ({
-                    ...f,
-                    items: [...f.items, { name: '', quantity: 1, price: 0 }]
-                  }))
-                }>
-                Add Item
-              </Button>
-
-              <Button type="submit">Add Items</Button>
+              <div className="flex justify-between items-center">
+                <Button 
+                  type="button" 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() =>
+                    setAddForm(f => ({
+                      ...f,
+                      items: [...f.items, { name: '', quantity: 1, price: 0 }]
+                    }))
+                  }
+                >
+                  + Add Another Row
+                </Button>
+                <Button type="submit">Submit My Items</Button>
+              </div>
             </form>
           )}
-          <div>
-            <h3 className="font-medium">Full Group Order</h3>
-            <div className="grid gap-2 sm:grid-cols-2">
-              {group.items.map((i, idx) => (
-                <Card key={idx} className="p-3">
-                  <p className="font-semibold">
-                    {i.addedBy?.name || 'User'}
-                  </p>
-                  <p className="text-sm">
-                    {i.name} × {i.quantity}
-                  </p>
-                  <p className="text-sm font-medium">
-                    ₹{(i.quantity * i.price).toFixed(2)}
-                  </p>
-                </Card>
-              ))}
+
+          {/* GROUP SUMMARY SECTION */}
+          <div className="space-y-4">
+            <div className="flex justify-between items-end">
+              <h3 className="font-semibold text-sm uppercase tracking-wider">Group Summary</h3>
+              <p className="text-sm font-bold">Total: ₹{(group.totalAmount || 0).toFixed(2)}</p>
+            </div>
+            
+            <div className="grid gap-3 sm:grid-cols-2">
+              {itemsList.length > 0 ? (
+                itemsList.map((i, idx) => (
+                  <Card key={idx} className="p-3 border-l-4 border-l-primary/50">
+                    <div className="flex justify-between items-start">
+                      <p className="text-xs font-bold text-muted-foreground uppercase">
+                        {i.addedBy?.name || 'Group Member'}
+                      </p>
+                    </div>
+                    <p className="font-medium">
+                      {i.name} <span className="text-muted-foreground text-sm">× {i.quantity}</span>
+                    </p>
+                    <p className="text-sm font-semibold mt-1">
+                      ₹{(i.quantity * i.price).toFixed(2)}
+                    </p>
+                  </Card>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground italic col-span-2">No items added yet.</p>
+              )}
             </div>
           </div>
 
