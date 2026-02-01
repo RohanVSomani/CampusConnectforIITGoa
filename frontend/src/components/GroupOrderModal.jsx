@@ -11,10 +11,8 @@ export default function GroupOrderModal({
   onFinalize,
   onClose
 }) {
-  // Safety Check: If group isn't passed or is null, don't render anything
   if (!group) return null;
 
-  // Defensive arrays to prevent .map() on undefined
   const itemsList = group.items || [];
   const formItems = addForm?.items || [];
 
@@ -22,7 +20,6 @@ export default function GroupOrderModal({
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
       <Card className="w-full max-w-3xl max-h-[90vh] overflow-y-auto relative shadow-2xl">
         
-        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
@@ -49,7 +46,6 @@ export default function GroupOrderModal({
 
         <CardContent className="space-y-8 pt-6">
           
-          {/* ADD ITEMS SECTION - Only show if group is open */}
           {group.status === 'open' && (
             <form onSubmit={onAddItems} className="space-y-4 p-4 bg-accent/30 rounded-lg">
               <h3 className="font-semibold text-sm uppercase tracking-wider">Add Your Items</h3>
@@ -124,7 +120,6 @@ export default function GroupOrderModal({
             </form>
           )}
 
-          {/* GROUP SUMMARY SECTION */}
           <div className="space-y-4">
             <div className="flex justify-between items-end">
               <h3 className="font-semibold text-sm uppercase tracking-wider">Group Summary</h3>

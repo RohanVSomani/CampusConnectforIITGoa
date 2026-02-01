@@ -23,7 +23,7 @@ export async function createGroup(req, res) {
 }
 
 export async function joinGroup(req, res) {
-  const { groupId, items = [] } = req.body; // Default items to empty array
+  const { groupId, items = [] } = req.body; 
 
   const order = await Order.findOne({ groupId });
   if (!order) return res.status(404).json({ message: 'Group not found' });
@@ -31,12 +31,10 @@ export async function joinGroup(req, res) {
   if (order.status !== 'open')
     return res.status(400).json({ message: 'Group closed' });
 
-  // Add user to members list if they aren't already there
   if (!order.members.includes(req.user._id)) {
     order.members.push(req.user._id);
   }
 
-  // If items were provided during join, add them
   if (items.length > 0) {
     const mapped = items.map(i => ({ ...i, addedBy: req.user._id }));
     order.items.push(...mapped);
@@ -44,8 +42,6 @@ export async function joinGroup(req, res) {
   }
 
   await order.save();
-
-  // Return the full populated group so the frontend can display the modal immediately
   const updatedOrder = await Order.findOne({ groupId })
     .populate('leader', 'name')
     .populate('items.addedBy', 'name');
