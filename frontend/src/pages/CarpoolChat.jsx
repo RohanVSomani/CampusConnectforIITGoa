@@ -11,30 +11,27 @@ export default function CarpoolChat({ carpool, onClose }) {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
   const bottomRef = useRef(null);
+  const { user, loading } = useAuth();
 
-  /* ===============================
-     Load chat history (REST)
-     =============================== */
   useEffect(() => {
+    if (loading || !user) return;
+  
     async function loadHistory() {
       try {
         const res = await api.get(`/carpool-chat/${carpool._id}`);
-        setMessages(res.data.data || []); // ✅ FIXED
+        setMessages(res.data.data || []);
       } catch (err) {
         console.error('Chat history error:', err);
       }
     }
-
+  
     loadHistory();
-  }, [carpool._id]);
+  }, [carpool._id, user, loading]);
+  
 
-  /* ===============================
-     Join / leave socket room
-     =============================== */
      useEffect(() => {
       if (!socket || !connected) return;
     
-      // ✅ correct event for /carpool-chat
       socket.emit('join', { carpoolId: carpool._id });
     
       socket.on('message', (msg) => {
