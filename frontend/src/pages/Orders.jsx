@@ -82,7 +82,6 @@ export default function Orders() {
 
 
   async function handleAddItems(e) {
-    e.preventDefault();
 
     const items = addForm.items.filter(i => i.name.trim());
     if (!items.length) return alert('Add at least one item');
@@ -157,6 +156,7 @@ export default function Orders() {
                     }))
                   }
                   required />
+
 
                 <Input type="number" min={0} step={0.01} className="w-24"
                   placeholder="Price"
