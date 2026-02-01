@@ -72,7 +72,7 @@ export default function CarpoolChat({ carpool, onClose }) {
         </Button>
       </CardHeader>
 
-      <CardContent className="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-sm">
+      <CardContent className="flex-1 overflow-y-auto px-4 py-3 m-2 space-y-3 text-sm">
         {messages.map((m) => (
           <div key={m._id} className="space-y-0.5">
             <p className="text-xs text-muted-foreground font-medium">
