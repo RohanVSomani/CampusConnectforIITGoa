@@ -41,7 +41,10 @@ export async function joinGroup(req, res) {
   order.totalAmount += items.reduce((s, i) => s + i.quantity * i.price, 0);
 
   await order.save();
-  res.json({ success: true });
+  const updatedOrder = await Order.findOne({ groupId })
+    .populate('leader', 'name')
+    .populate('items.addedBy', 'name');
+  res.json({ success: true , data: updatedOrder});
 }
 
 export async function addItems(req, res) {
@@ -62,7 +65,10 @@ export async function addItems(req, res) {
   order.totalAmount += items.reduce((s, i) => s + i.quantity * i.price, 0);
 
   await order.save();
-  res.json({ success: true });
+  const updatedOrder = await Order.findOne({ groupId })
+    .populate('leader', 'name')
+    .populate('items.addedBy', 'name');
+  res.json({ success: true , data: updatedOrder});
 }
 
 export async function listOpenGroups(req, res) {
