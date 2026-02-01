@@ -4,7 +4,7 @@ import { useCarpoolChatSocket } from '@/lib/socket';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
+import { useAuth } from '@/context/AuthContext';
 export default function CarpoolChat({ carpool, onClose }) {
   const { socket, connected } = useCarpoolChatSocket();
 
