@@ -15,7 +15,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <ThemeProvider>
         <AuthProvider>
           <App />
-          <Toaster richColors position="top-right" />
+          <Toaster richColors position="top-right p-8" />
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>

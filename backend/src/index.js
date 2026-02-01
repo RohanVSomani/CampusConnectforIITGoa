@@ -19,7 +19,6 @@ app.use('/api', routes);
 
 const server = http.createServer(app);
 
-/* 🔥 SINGLE Socket.IO INSTANCE */
 const io = new Server(server, {
   path: '/socket.io',
   cors: {
