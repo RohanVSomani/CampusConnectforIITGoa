@@ -11,9 +11,10 @@ export default function CarpoolChat({ carpool, onClose }) {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
   const bottomRef = useRef(null);
-  const { user, loading } = useAuth();
+  
 
   useEffect(() => {
+    const { user, loading } = useAuth();
     if (loading || !user) return;
   
     async function loadHistory() {
