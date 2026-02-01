@@ -58,8 +58,6 @@ export default function Carpool() {
   useEffect(() => {
     fetchList();
   }, []);
-
-  // 🔥 Realtime updates
   useEffect(() => {
     if (!socket || !connected) return;
 
@@ -214,13 +212,9 @@ export default function Carpool() {
   </Button>
 )}
 
-
-                    {/* PASSENGER → LEAVE */}
                     {c.status === 'open' && my.asPassenger.some(p => p._id === c._id) && (
                       <Button size="sm" variant="outline" onClick={() => handleLeave(c._id)}>Leave</Button>
                     )}
-
-                    {/* LEADER → END */}
                     {c.status === 'open' && isLeader && (
                       <Button size="sm" variant="destructive" onClick={() => handleEnd(c._id)}>
                         End Carpool
