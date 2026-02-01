@@ -21,12 +21,11 @@ export function useSocket(namespace) {
       path: '/socket.io',
       transports: ['websocket'],
       withCredentials: true,
-      auth: { token },
     });
 
     managerRef.current = manager;
 
-    const socket = manager.socket(namespace);
+    const socket = manager.socket(namespace,{auth: { token },});
     socketRef.current = socket;
 
     socket.on('connect', () => {

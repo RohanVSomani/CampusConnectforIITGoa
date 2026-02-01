@@ -27,11 +27,11 @@ export function initSocket(io) {
     
       try {
         const token = socket.handshake.auth?.token;
-        if (!token) {
+        /*if (!token) {
           console.log('❌ Disconnect: No token');
           socket.emit('auth_error', 'No token');
           return socket.disconnect(true);
-        }
+        }*/
     
         let user;
         try {
