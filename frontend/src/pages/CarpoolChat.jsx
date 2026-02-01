@@ -4,19 +4,15 @@ import { useCarpoolChatSocket } from '@/lib/socket';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuth } from '@/context/AuthContext';
+
 export default function CarpoolChat({ carpool, onClose }) {
   const { socket, connected } = useCarpoolChatSocket();
 
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
   const bottomRef = useRef(null);
-  
 
   useEffect(() => {
-    const { user, loading } = useAuth();
-    if (loading || !user) return;
-  
     async function loadHistory() {
       try {
         const res = await api.get(`/carpool-chat/${carpool._id}`);
@@ -25,10 +21,9 @@ export default function CarpoolChat({ carpool, onClose }) {
         console.error('Chat history error:', err);
       }
     }
-  
+
     loadHistory();
-  }, [carpool._id, user, loading]);
-  
+  }, [carpool._id]);
 
      useEffect(() => {
       if (!socket || !connected) return;
